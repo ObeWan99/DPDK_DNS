@@ -234,7 +234,10 @@ ovs-ctl --no-ovsdb-server --db-sock="$DB_SOCK" start
 
 
 ```sh
+# Проверка состояния службы Open vSwitch
 ovs-ctl status
+
+# Проверка состояния службы Open vSwitch
 ovs-ctl restart
 ```
 
