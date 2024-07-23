@@ -1,16 +1,3 @@
-# The DPDK is composed of several directories, including:
-
-- doc: DPDK Documentation
-- license: DPDK license information
-- lib: Source code of DPDK libraries
-- drivers: Source code of DPDK poll-mode drivers
-- app: Source code of DPDK applications (automatic tests)
-- examples: Source code of DPDK application examples
-- config, buildtools: Framework-related scripts and configuration
-- usertools: Utility scripts for end-users of DPDK applications
-- devtools: Scripts for use by DPDK developers
-- kernel: Kernel modules needed for some operating systems
-
 # Установка dpdk:
 
 ```sh
