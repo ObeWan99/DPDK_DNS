@@ -80,11 +80,13 @@ sudo modprobe uio_pci_generic
 
 Если используете vfio-pci:
 ```sh
+# Я не использовал
 sudo modprobe vfio-pci
 ```
 
 Режим VFIO без IOMMU:
 ```sh
+# Я не использовал
 sudo modprobe vfio enable_unsafe_noiommu_mode=1
 ```
 
@@ -97,7 +99,7 @@ lspci | grep Eth
 
 Отключение сетевого интерфейса:
 ```sh
-sudo ifconfig <interface> down
+sudo ip link set <interface> down
 ```
 
 Теперь привяжем сетевую карту к одному из этих драйверов. Используйте утилиту dpdk-devbind для этого. В комплекте с DPDK идет эта утилита:
@@ -107,6 +109,7 @@ sudo ./usertools/dpdk-devbind.py --bind=uio_pci_generic <PCI_ADDRESS>
 
 Для vfio-pci:
 ```sh
+# Я не использовал
 sudo ./usertools/dpdk-devbind.py --bind=vfio-pci <PCI_ADDRESS>
 ```
 
@@ -166,13 +169,13 @@ echo "nodev /mnt/huge hugetlbfs defaults 0 0" >> /etc/fstab
 
 Добавление в /etc/sysctl.conf:
 ```sh
-# Вы сообщаете ядру выделить 1024 страницы размером 2 МБ для использования в качестве огромных страниц. Это динамически изменяет количество доступных огромных страниц без необходимости перезагрузки системы.
 echo "vm.nr_hugepages=1024" >> /etc/sysctl.conf
 sysctl -p
 ```
 
 # Чтобы изолировать ядра
 
+## надо тут поработать ещё ...
 Проверить загрузку ядер:
 ```sh
 mpstat -P ALL
