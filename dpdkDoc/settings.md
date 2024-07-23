@@ -237,7 +237,7 @@ ovs-ctl --no-ovsdb-server --db-sock="$DB_SOCK" start
 # Проверка состояния службы Open vSwitch
 ovs-ctl status
 
-# Проверка состояния службы Open vSwitch
+# Перезапуск службы Open vSwitch
 ovs-ctl restart
 ```
 
@@ -249,30 +249,25 @@ ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 ovs-vsctl add-port br0 dpdk0 -- set Interface dpdk0 \
     type=dpdk options:dpdk-devargs=<PCI_ADDRESS>
 
-ip addr add 192.168.1.112/24 dev br0
+# Тот же IP, что был до этого у сетевого порта
+ip addr add <IP_ADDRESS> dev br0
 
+# Активировать мост br0
 ip link set br0 up
 
+# Этот интерфейс является внутренним для OVS и обычно не используется напрямую пользователем. Он создается и управляется демоном ovs-vswitchd автоматически при запуске
 ip link set ovs-netdev up
+
+# После настройки перезапустить службу ovs
+ovs-ctl restart
 ```
 
 ```sh
 # Проверить конфиг моста br0
 ovs-vsctl show
-
-# Првоерить поддержку DPDK
-ovs-vsctl get Open_vSwitch . dpdk_initialized
 ```
 
-```sh
-# Статус ovs
-ovs-ctl status
-
-# Перезапустить коммутатор ovs
-ovs-ctl restart
-```
-
-# Настрйока IPv4
+# Настрйока IPv4(запасной вариант)
 nano /etc/network/interfaces
 
 auto eth0
