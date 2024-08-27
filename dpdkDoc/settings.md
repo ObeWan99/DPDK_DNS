@@ -2,6 +2,7 @@
 
 ```sh
 sudo apt update
+wget https://fast.dpdk.org/rel/dpdk-23.11.1.tar.xz
 ```
 
 ```sh
