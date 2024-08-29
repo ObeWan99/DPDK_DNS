@@ -255,8 +255,6 @@ ovs-ctl restart
 ovs-vsctl show
 ```
 
-===========================================================================================================================
-===========================================================================================================================
 
 # Download trex
 
@@ -329,24 +327,29 @@ push --port 0 -f /home/user/cmds_over_dns_txt_queries_and_reponses_ONLY.pcap
 ```
 
 # Eve setup
-
-cd /opt/unetlab/tmp/0/24ff17f7-923d-4e31-9379-cfc1a5cb1b34/1/
-
+```sh
 cd /opt/unetlab/addons/qemu/
+
 mkdir linux-astra-1.7
+
 cd $_
+
+# создает новый виртуальный жесткий диск с именем hda.qcow2
 qemu-img create -f qcow2 hda.qcow2 20G
+
 mv /path/to/1.7.0-11.06.2021_12.40.iso ./cdrom.iso
 
 chmod -R 775 astra-1.7/
+
 chown  -R root:root astra-1.7/
+
+# запускает скрипт unl_wrapper с параметром -a fixpermissions, который исправляет права доступа для файлов и директорий в EVE-NG
 /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
 
 cd /opt/unetlab/tmp/0/24ff17f7-923d-4e31-9379-cfc1a5cb1b34/1/
+
 qemu-img commit hda.qcow2 
-   
-===========================================================================================================================
-===========================================================================================================================
+```
 
 # Inet
 
