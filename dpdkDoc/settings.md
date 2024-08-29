@@ -255,9 +255,166 @@ ovs-ctl restart
 ovs-vsctl show
 ```
 
-# Настрйока IPv4(запасной вариант)
-nano /etc/network/interfaces
+=====================================================================
+=====================================================================
 
-auto eth0
-iface eth0 inet dhcp
+# Download trex
 
+# Setup TREX
+- выолнить настройку DPDK, конфгурация сетевых интерфейсов и их привязка к DPDK.
+
+- выполнить конфигурацию trex.
+
+```sh
+sudo nano /etc/trex_cfg.yaml
+```
+
+```sh
+- version: 2              # Configuration file version, should be 2 for TRex
+  interfaces: ["0000:00:04.0", "dummy"]  # List of interfaces' PCI addresses
+  port_limit: 2           # Number of ports to use, should be even: 2, 4, 6, etc.
+  port_bandwidth_gb: 10   # Optional, specify bandwidth in Gbps for each port (adjust as needed)
+  platform:
+      master_thread_id: 0
+      latency_thread_id: 1
+      dual_if:
+             - socket   : 0
+               threads  : [2,3]
+```
+
+# Run TREX
+
+```sh
+# запуск сервера TRex
+sudo ./t-rex-64 -i --no-watchdog
+```
+
+```sh
+# подключения к серверу TRex через CLI
+./trex-console
+```
+
+# TREX console
+
+```sh
+service
+
+# настйрока L3 трафика
+l3 -p 0 --src 192.168.0.2 --dst 192.168.0.1
+
+service --off
+
+# настройка атрибутов порта
+portattr
+
+# запуск скрипта генерации трафика в 10 мегабит
+start -f stl/syn_attack.py --force -m 10mbps
+
+# обновление параметра генерации трафика 1 мегабит
+update -m 1mbps - change speed
+
+# остановка трафика
+stop - stop traffic gen
+
+# удаление текущих настроек
+clear
+```
+
+```sh
+# отправка трафика из pcap
+push --port 0 -f /home/user/cmds_over_dns_txt_queries_and_reponses_ONLY.pcap
+
+# параметры для команды push
+-d 10 -c 10000 --force
+```
+
+# Eve setup
+
+cd /opt/unetlab/tmp/0/24ff17f7-923d-4e31-9379-cfc1a5cb1b34/1/
+
+cd /opt/unetlab/addons/qemu/
+mkdir linux-astra-1.7
+cd $_
+qemu-img create -f qcow2 hda.qcow2 20G
+mv /path/to/1.7.0-11.06.2021_12.40.iso ./cdrom.iso
+
+chmod -R 775 astra-1.7/
+chown  -R root:root astra-1.7/
+/opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+
+cd /opt/unetlab/tmp/0/24ff17f7-923d-4e31-9379-cfc1a5cb1b34/1/
+qemu-img commit hda.qcow2 
+   
+=====================================================================
+=====================================================================
+
+# Inet
+
+## server
+
+```sh
+ssh root@172.16.0.176
+	1234
+iptables -t nat -I POSTROUTING -o enx9cebe8b4d37f -s 172.16.0.xxx -j MASQUERADE
+```
+
+## client
+
+```sh
+sudo ip route del
+sudo ip route add default via 172.16.0.176
+sudo nano /etc/resolv.conf 
+```
+
+# Hostst
+
+- dpdk-host
+	user@172.16.0.187
+	192.168.0.1
+- client-host
+	user@172.16.0.183
+	192.168.0.2
+- proxmox
+	obewan@172.16.0.146
+
+
+# Apt setup
+
+```sh
+sudo nano /etc/apt/sources.list
+
+	deb https://download.astralinux.ru/astra/stable/1.7_x86-64/repository-main/ 1.7_x86-64 main contrib non-free
+	deb https://download.astralinux.ru/astra/stable/1.7_x86-64/repository-update/ 1.7_x86-64 main contrib non-free
+	deb https://download.astralinux.ru/astra/stable/1.7_x86-64/repository-base/ 1.7_x86-64 main contrib non-free
+	deb https://download.astralinux.ru/astra/stable/1.7_x86-64/repository-extended/ 1.7_x86-64 main contrib non-free
+
+
+	deb [trusted=yes] http://deb.debian.org/debian buster main contrib non-free
+	deb-src [trusted=yes] http://deb.debian.org/debian buster main contrib non-free
+	deb [trusted=yes] http://security.debian.org/debian-security buster/updates main contrib non-free
+	deb-src [trusted=yes] http://security.debian.org/debian-security buster/updates main contrib non-free
+
+sudo nano /etc/apt/apt.conf.d/99disable-ssl-verification	
+    Acquire::https::dl.astralinux.ru::Verify-Peer "false";
+```
+
+# Perfomance tests
+```sh
+apt install iperf3
+```
+
+## client (client-host)
+```sh
+iperf3 -c 192.168.0.1 -B 192.168.0.2
+```
+
+## server (dpdk-host)
+```sh
+iperf3 -s -B 192.168.0.1
+```
+
+```
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-10.00  sec  19.2 GBytes  16.5 Gbits/sec    0             sender
+[  5]   0.00-10.00  sec  19.2 GBytes  16.5 Gbits/sec                  receiver
+```
