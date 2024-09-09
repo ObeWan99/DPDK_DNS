@@ -260,7 +260,16 @@ ovs-vsctl show
 # Download trex
 
 ```sh
+sudo apt update
+sudo apt upgrade -y
 sudo apt install -y build-essential libnuma-dev python3-pip python3-dev libpcap-dev linux-headers-$(uname -r) git cmake libelf-dev
+
+git clone --recursive https://github.com/cisco-system-traffic-generator/trex-core.git
+cd trex-core
+
+# Configure and build TRex with DPDK:
+./b configure --dpdk-lib
+./b build
 ```
 
 # Setup TREX
