@@ -259,6 +259,10 @@ ovs-vsctl show
 
 # Download trex
 
+```sh
+sudo apt install -y build-essential libnuma-dev python3-pip python3-dev libpcap-dev linux-headers-$(uname -r) git cmake libelf-dev
+```
+
 # Setup TREX
 - выолнить настройку DPDK, конфгурация сетевых интерфейсов и их привязка к DPDK.
 
