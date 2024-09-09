@@ -83,6 +83,7 @@ sudo modprobe vfio enable_unsafe_noiommu_mode=1
 Узнать PCI адрес вашей сетевой карты Virtio:
 ```sh
 lspci | grep Eth
+ethtool -i <interface>
 ```
 
 Отключение сетевого интерфейса:
