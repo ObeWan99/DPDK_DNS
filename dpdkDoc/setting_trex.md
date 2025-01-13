@@ -5,7 +5,7 @@ sudo apt update
 sudo apt install -y build-essential libnuma-dev python3-pip python3-dev libpcap-dev linux-headers-$(uname -r) git cmake libelf-dev
 wget --no-check-certificate https://trex-tgn.cisco.com/trex/release/latest
 tar xvf latest
-cp  v.3.06 /tmp/
+cp  v3.06 /tmp/
 ```
 
 # Setup TREX
