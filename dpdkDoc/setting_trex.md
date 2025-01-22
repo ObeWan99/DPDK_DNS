@@ -43,6 +43,9 @@ sudo ./t-rex-64 -i --no-watchdog
 ./trex-console
 
 start -f stl/syn_attack.py --force -m 10000mbps
+
+# запуск pcap файла
+push -f /home/user/torrent_3_ng.pcapng -p 0 --force -с 100
 ```
 
 # Run TREX console
