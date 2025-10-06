@@ -18,6 +18,9 @@ cd dpdk-<version>
 Для настройки сборки DPDK используйте:
 ```sh
 meson setup build
+
+meson setup build --wipe -Ddefault_library=shared
+ninja -C build
 ```
 
 или, чтобы включить примеры в сборку, замените команду meson на:
